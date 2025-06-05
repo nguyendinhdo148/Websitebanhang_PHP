@@ -1,0 +1,163 @@
+<?php include 'app/views/shares/header.php'; ?>
+
+<div class="container py-5">
+    <!-- Banner Section -->
+
+    
+
+    <?php if (!empty($products)): ?>
+    <div class="row">
+        <?php foreach ($products as $product): ?>
+        <div class="col-lg-4 col-md-6 mb-4">
+            <div class="card product-card h-100 shadow-sm border-0">
+                <div class="card-img-top product-image-container p-3">
+                    <?php if (!empty($product->image)): ?>
+                        <!-- Đường dẫn ảnh đúng để hiển thị -->
+                        <img src="/<?php echo htmlspecialchars($product->image, ENT_QUOTES, 'UTF-8'); ?>" 
+                             class="product-image img-fluid"
+                             alt="<?php echo htmlspecialchars($product->name, ENT_QUOTES, 'UTF-8'); ?>">
+                    <?php else: ?>
+                        <img src="https://via.placeholder.com/300x200?text=No+Image" 
+                             class="product-image img-fluid"
+                             alt="No image">
+                    <?php endif; ?>
+                </div>
+                
+                <div class="card-body d-flex flex-column">
+                    <div class="d-flex justify-content-between align-items-start mb-2">
+                        <h3 class="card-title h5 font-weight-bold mb-0 flex-grow-1">
+                            <a href="/webbanhang/Product/detail/<?php echo $product->id; ?>" 
+                               class="text-decoration-none text-dark">
+                                <?php echo htmlspecialchars($product->name, ENT_QUOTES, 'UTF-8'); ?>
+                            </a>
+                        </h3>
+                        <span class="badge badge-pill badge-info ml-2">ID: <?php echo $product->id; ?></span>
+                    </div>
+                    
+                    <div class="mb-2">
+                        <span class="badge badge-secondary">
+                            <i class="fas fa-tag mr-1"></i>
+                            <?php echo htmlspecialchars($product->category_name, ENT_QUOTES, 'UTF-8'); ?>
+                        </span>
+                    </div>
+                    
+                    <div class="product-description mb-3">
+                        <?php 
+                        $description = htmlspecialchars($product->description, ENT_QUOTES, 'UTF-8');
+                        if (strlen($description) > 120) {
+                            echo substr($description, 0, 120) . '...';
+                        } else {
+                            echo $description;
+                        }
+                        ?>
+                    </div>
+                    
+                    <div class="mt-auto">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <h5 class="text-danger font-weight-bold mb-0">
+                                <?php echo number_format($product->price, 0, ',', '.'); ?> VND
+                            </h5>
+                            <div class="product-actions">
+                                <a href="/webbanhang/Product/edit/<?php echo $product->id; ?>" 
+                                   class="btn btn-sm btn-outline-warning mr-1"
+                                   title="Sửa sản phẩm">
+                                   <i class="fas fa-edit"></i>
+                                </a>
+                                <a href="/webbanhang/Product/delete/<?php echo $product->id; ?>"
+                                   class="btn btn-sm btn-outline-danger"
+                                   title="Xóa sản phẩm"
+                                   onclick="return confirm('Bạn có chắc chắn muốn xóa sản phẩm này?');">
+                                   <i class="fas fa-trash-alt"></i>
+                                </a>
+                            </div>
+                        </div>
+
+                        <div class="d-flex">
+                            <a href="/webbanhang/Product/detail/<?php echo $product->id; ?>" 
+                               class="btn btn-info btn-sm flex-grow-1 mr-2">
+                               <i class="fas fa-info-circle mr-1"></i> Chi tiết
+                            </a>
+                            <a href="/webbanhang/Product/addToCart/<?php echo $product->id; ?>" 
+                               class="btn btn-primary btn-sm flex-grow-1">
+                               <i class="fas fa-cart-plus mr-1"></i> Mua ngay
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <?php endforeach; ?>
+    </div>
+    <?php else: ?>
+    <div class="alert alert-info text-center py-5">
+        <i class="fas fa-box-open fa-3x mb-3 text-info"></i>
+        <h3 class="alert-heading">Không có sản phẩm nào</h3>
+        <p>Hãy bắt đầu bằng cách thêm sản phẩm mới</p>
+        <a href="/webbanhang/product/add" class="btn btn-info mt-2">
+            <i class="fas fa-plus mr-1"></i> Thêm sản phẩm đầu tiên
+        </a>
+    </div>
+    <?php endif; ?>
+</div>
+
+<style>
+    .carousel img {
+        max-height: 300px;
+        object-fit: cover;
+    }
+
+    .product-card {
+        transition: all 0.3s ease;
+        border-radius: 12px;
+        overflow: hidden;
+    }
+
+    .product-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+    }
+
+    .product-image-container {
+        height: 220px;
+        overflow: hidden;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #f8f9fa;
+        border-bottom: 1px solid #eee;
+    }
+
+    .product-image {
+        max-height: 100%;
+        max-width: 100%;
+        object-fit: contain;
+        transition: transform 0.3s ease;
+    }
+
+    .product-card:hover .product-image {
+        transform: scale(1.05);
+    }
+
+    .product-description {
+        color: #6c757d;
+        font-size: 0.9rem;
+        line-height: 1.5;
+        min-height: 60px;
+    }
+
+    .product-actions .btn {
+        width: 32px;
+        height: 32px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        padding: 0;
+    }
+    
+    .card-body {
+        padding: 1.25rem;
+    }
+</style>
+
+<?php include 'app/views/shares/footer.php'; ?>
