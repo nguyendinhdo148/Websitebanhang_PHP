@@ -47,6 +47,11 @@
                         <li class="nav-item">
                             <a class="nav-link" href="/webbanhang/Category/">Quản lý danh mục</a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/webbanhang/account/list">
+                                <i class="fas fa-users"></i> Quản lý người dùng
+                            </a>
+                        </li>
                     <?php endif; ?>
 
                     <li class="nav-item">
