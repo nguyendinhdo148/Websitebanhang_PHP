@@ -321,4 +321,81 @@ class AccountController
         header('Location: /webbanhang/account/list');
         exit();
     }
+
+    public function profile()
+    {
+        if (!isset($_SESSION['user'])) {
+            header('Location: /webbanhang/account/login');
+            exit();
+        }
+        
+        $user = $this->accountModel->getUserById($_SESSION['user']['id']);
+        include 'app/views/account/profile.php';
+    }
+
+    public function editProfile()
+    {
+        if (!isset($_SESSION['user'])) {
+            header('Location: /webbanhang/account/login');
+            exit();
+        }
+        
+        $user = $this->accountModel->getUserById($_SESSION['user']['id']);
+        include 'app/views/account/editProfile.php';
+    }
+
+    public function updateProfile()
+    {
+        if (!isset($_SESSION['user']) || $_SERVER['REQUEST_METHOD'] !== 'POST') {
+            header('Location: /webbanhang/account/login');
+            exit();
+        }
+
+        $errors = [];
+        $userId = $_SESSION['user']['id'];
+        $email = $_POST['email'] ?? '';
+        $phoneNumber = $_POST['phoneNumber'] ?? '';
+        $fullName = $_POST['fullname'] ?? '';
+
+        // Validate inputs
+        if (empty($fullName)) {
+            $errors['fullname'] = "Vui lòng nhập họ tên!";
+        }
+
+        if (empty($email) || !filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            $errors['email'] = "Email không hợp lệ!";
+        }
+
+        if (empty($phoneNumber) || !preg_match("/^[0-9]{10}$/", $phoneNumber)) {
+            $errors['phoneNumber'] = "Số điện thoại không hợp lệ!";
+        }
+
+        // Handle avatar upload
+        $avatarPath = $_POST['existing_avatar'] ?? null;
+        if (isset($_FILES['avatar']) && $_FILES['avatar']['error'] === UPLOAD_ERR_OK) {
+            $uploadResult = $this->uploadAvatar($_FILES['avatar']);
+            if (strpos($uploadResult, 'Error:') === 0) {
+                $errors['avatar'] = substr($uploadResult, 7);
+            } else {
+                $avatarPath = $uploadResult;
+            }
+        }
+
+        if (!empty($errors)) {
+            $_SESSION['errors'] = $errors;
+            header('Location: /webbanhang/account/editProfile');
+            exit();
+        }
+
+        if ($this->accountModel->updateProfile($userId, $fullName, $email, $phoneNumber, $avatarPath)) {
+            $_SESSION['success_message'] = 'Cập nhật thông tin thành công';
+            // Update session information
+            $_SESSION['user']['fullname'] = $fullName;
+            header('Location: /webbanhang/account/profile');
+        } else {
+            $_SESSION['error_message'] = 'Có lỗi xảy ra khi cập nhật thông tin';
+            header('Location: /webbanhang/account/editProfile');
+        }
+        exit();
+    }
 }

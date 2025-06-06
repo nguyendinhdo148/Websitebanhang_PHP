@@ -154,4 +154,31 @@ class AccountModel
             'role' => $role
         ]);
     }
+
+    public function updateProfile($id, $fullname, $email, $phoneNumber, $avatar = null) {
+        try {
+            $query = "UPDATE " . $this->table_name . " 
+                     SET fullname = :fullname, 
+                         email = :email, 
+                         phone_number = :phone_number" .
+                     ($avatar ? ", avatar = :avatar" : "") .
+                     " WHERE id = :id";
+            
+            $params = [
+                'id' => $id,
+                'fullname' => $fullname,
+                'email' => $email,
+                'phone_number' => $phoneNumber
+            ];
+            
+            if ($avatar) {
+                $params['avatar'] = $avatar;
+            }
+            
+            $stmt = $this->conn->prepare($query);
+            return $stmt->execute($params);
+        } catch (PDOException $e) {
+            return false;
+        }
+    }
 }

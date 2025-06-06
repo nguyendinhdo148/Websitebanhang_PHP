@@ -93,6 +93,9 @@
                                 <span class="badge badge-primary admin-badge">ADMIN</span>
                             <?php endif; ?>
                         </span>
+                        <a href="/webbanhang/account/profile" class="btn btn-outline-primary btn-sm mr-2">
+                            <i class="fas fa-user-circle"></i> Hồ sơ
+                        </a>
                         <a href="/webbanhang/account/logout" class="btn btn-outline-danger btn-sm">
                             <i class="fas fa-sign-out-alt"></i> Đăng xuất
                         </a>

@@ -33,11 +33,14 @@ class ProductController
         $categories = $categoryModel->getCategories();
 
         $categoryId = isset($_GET['category_id']) && is_numeric($_GET['category_id']) ? intval($_GET['category_id']) : null;
+        $searchTerm = isset($_GET['search']) ? trim($_GET['search']) : '';
+        $minPrice = isset($_GET['min_price']) && is_numeric($_GET['min_price']) ? intval($_GET['min_price']) : null;
+        $maxPrice = isset($_GET['max_price']) && is_numeric($_GET['max_price']) ? intval($_GET['max_price']) : null;
 
         if ($categoryId) {
-            $products = $this->productModel->getProductsByCategory($categoryId);
+            $products = $this->productModel->getProductsByCategory($categoryId, $searchTerm, $minPrice, $maxPrice);
         } else {
-            $products = $this->productModel->getProducts();
+            $products = $this->productModel->getProducts($searchTerm, $minPrice, $maxPrice);
         }
 
         include 'app/views/product/list.php';
