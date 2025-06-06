@@ -9,17 +9,34 @@
                 </div>
                 <div class="card-body">
                     <?php 
-$avatarPath = '/webbanhang/public/uploads/avatars/' . $user->avatar;
-if ($user->avatar && file_exists($_SERVER['DOCUMENT_ROOT'] . $avatarPath)): ?>
-<div class="row mb-4 justify-content-center">
-    <div class="col-md-6 text-center">
-        <img src="<?php echo $avatarPath; ?>" 
-             class="img-fluid rounded-circle" 
-             style="max-width: 200px; max-height: 200px;"
-             alt="Avatar">
-    </div>
-</div>
-<?php endif; ?>
+                    // Xử lý hiển thị avatar
+                    $avatarPath = '';
+                    if ($user->avatar) {
+                        if (strpos($user->avatar, 'public/') !== false) {
+                            // Nếu là đường dẫn đầy đủ
+                            $avatarPath = '/' . $user->avatar;
+                        } else {
+                            // Nếu chỉ là tên file
+                            $avatarPath = '/public/uploads/avatars/' . $user->avatar;
+                        }
+                    }
+                    ?>
+                    
+                    <div class="row mb-4 justify-content-center">
+                        <div class="col-md-6 text-center">
+                            <?php if ($user->avatar && file_exists($_SERVER['DOCUMENT_ROOT'] . str_replace('/webbanhang', '', $avatarPath))): ?>
+                                <img src="<?php echo $avatarPath; ?>" 
+                                     class="img-fluid rounded-circle shadow" 
+                                     style="width: 200px; height: 200px; object-fit: cover;"
+                                     alt="Avatar của <?php echo htmlspecialchars($user->fullname); ?>">
+                            <?php else: ?>
+                                <div class="bg-light rounded-circle d-flex align-items-center justify-content-center shadow" 
+                                     style="width: 200px; height: 200px; margin: 0 auto;">
+                                    <i class="fas fa-user fa-4x text-secondary"></i>
+                                </div>
+                            <?php endif; ?>
+                        </div>
+                    </div>
                     
                     <div class="row mb-4">
                         <div class="col-md-4 text-muted">ID:</div>
